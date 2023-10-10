@@ -1,6 +1,7 @@
 import express from 'express';
-import { connect, Schema, model } from 'mongoose';
+import { connect } from 'mongoose';
 import { json } from 'body-parser';
+import UserModel from './UserModel'
 
 const app = express();
 
@@ -12,16 +13,9 @@ connect('mongodb+srv://Zak_Ben:HitOsQDcsfEWmypK@serverlessinstance.ppe7yuq.mongo
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('MongoDB Connected'))
+  .then(() => console.log('MongoDB Connected...'))
   .catch((err) => console.log(err));
 
-// Create a data schema and model
-const DataSchema = new Schema({
-  name: String,
-  value: String,
-});
-
-const Data = model('Data', DataSchema);
 
 // Routes
 app.post('/api/data', async (req, res) => {
