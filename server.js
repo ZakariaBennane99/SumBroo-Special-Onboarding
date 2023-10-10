@@ -1,7 +1,7 @@
 import express from 'express';
 import { connect } from 'mongoose';
 import { json } from 'body-parser';
-import UserModel from './UserModel'
+import UserModel from './UserModel';
 
 const app = express();
 
@@ -20,9 +20,8 @@ connect('mongodb+srv://Zak_Ben:HitOsQDcsfEWmypK@serverlessinstance.ppe7yuq.mongo
 // Routes
 app.post('/api/data', async (req, res) => {
   try {
-    const newData = new Data(req.body);
-    const savedData = await newData.save();
-    res.json(savedData);
+    // here where to change
+
   } catch (error) {
     res.status(400).json({ success: false, error });
   }
