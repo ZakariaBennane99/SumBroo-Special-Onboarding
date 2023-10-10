@@ -1,32 +1,53 @@
-import express from 'express';
-import { connect } from 'mongoose';
-import { json } from 'body-parser';
+import mongoose from 'mongoose';
 import UserModel from './UserModel';
-
-const app = express();
-
-// Body Parser Middleware
-app.use(json());
-
-// Connect to MongoDB
-connect('mongodb+srv://Zak_Ben:HitOsQDcsfEWmypK@serverlessinstance.ppe7yuq.mongodb.net/?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('MongoDB Connected...'))
-  .catch((err) => console.log(err));
+import usersList from '';
 
 
-// Routes
-app.post('/api/data', async (req, res) => {
-  try {
-    // here where to change
 
-  } catch (error) {
-    res.status(400).json({ success: false, error });
-  }
-});
+const connectDB = async () => {
+    try {
+        await mongoose.connect('mongodb+srv://Zak_Ben:HitOsQDcsfEWmypK@serverlessinstance.ppe7yuq.mongodb.net/?retryWrites=true&w=majority', {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true
+        });
+        console.log('Connected to MongoDB');
+    } catch (err) {
+        console.error('Error connecting to MongoDB', err);
+        process.exit(1); // Exit process with failure
+    }
+};
 
-const PORT = process.env.PORT || 5000;
+// connect to connectDB
+connectDB();
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+
+const createUsers = async (users) => {
+    for (let userData of users) {
+        try {
+            const newUser = new UserModel({
+                accountStatus: 'active',
+                socialMediaLinks: [{
+                    platformName: 'pinterest',
+                    profileLink: userData.profileLink,
+                    profileStatus: 'pendingPay',
+                    niche: userData.niche,
+                    audience: userData.audience
+                }]
+            });
+
+            const savedUser = await newUser.save();
+            console.log('User added successfully:', savedUser._id);
+            
+        } catch (err) {
+            console.error('Error adding user', err.message);
+        }
+    }
+
+    // Close connection when done
+    mongoose.connection.close();
+};
+
+createUsers(usersList);
+
